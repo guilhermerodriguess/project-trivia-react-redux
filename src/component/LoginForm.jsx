@@ -87,7 +87,7 @@ class LoginForm extends React.Component {
           onClick={ this.btnClick }
           data-testid="btn-play"
         >
-          Play
+            Play
         </button>
       </form>
     );
