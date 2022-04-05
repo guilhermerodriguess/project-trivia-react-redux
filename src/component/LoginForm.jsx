@@ -1,6 +1,7 @@
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { updateLogin } from '../redux/actions';
 
 class LoginForm extends React.Component {
@@ -72,7 +73,9 @@ class LoginForm extends React.Component {
           onClick={ this.btnClick }
           data-testid="btn-play"
         >
-          Play
+          <Link to="/game">
+            Play
+          </Link>
         </button>
       </form>
     );
