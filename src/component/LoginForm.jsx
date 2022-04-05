@@ -1,8 +1,9 @@
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { updateLogin } from '../redux/actions';
+import { Redirect } from 'react-router-dom';
+import { updateLogin, updateToken } from '../redux/actions';
+import Loading from './Loading';
 
 class LoginForm extends React.Component {
   constructor() {
@@ -10,6 +11,8 @@ class LoginForm extends React.Component {
     this.state = {
       nome: '',
       email: '',
+      loading: false,
+      redirect: false,
     };
   }
 
@@ -34,17 +37,28 @@ class LoginForm extends React.Component {
     return true;
   }
 
-  btnClick = (event) => {
+  btnClick = async (event) => {
     event.preventDefault();
-    const { handleInfo } = this.props;
+    const {
+      handleInfo, getToken,
+    } = this.props;
     handleInfo(this.state);
+    this.setState({
+      loading: true,
+    });
+    await getToken();
+    this.setState({
+      redirect: true,
+    });
   }
 
   render() {
     const {
-      nome, email,
+      nome, email, loading, redirect,
     } = this.state;
     const disabled = this.validateBtn();
+    if (redirect) return <Redirect to="/game" />;
+    if (loading) return <Loading />;
     return (
       <form>
         <label htmlFor="nome">
@@ -68,14 +82,12 @@ class LoginForm extends React.Component {
           />
         </label>
         <button
-          type="button"
+          type="submit"
           disabled={ disabled }
           onClick={ this.btnClick }
           data-testid="btn-play"
         >
-          <Link to="/game">
             Play
-          </Link>
         </button>
       </form>
     );
@@ -84,10 +96,12 @@ class LoginForm extends React.Component {
 
 LoginForm.propTypes = {
   handleInfo: propTypes.func.isRequired,
+  getToken: propTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   handleInfo: (state) => dispatch(updateLogin(state)),
+  getToken: () => dispatch(updateToken()),
 });
 
 export default connect(null, mapDispatchToProps)(LoginForm);
