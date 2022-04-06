@@ -13,6 +13,7 @@ class Questions extends React.Component {
       respostaApi: 'vazio',
       index: 0,
       disabled: false,
+      validateColor: false,
     };
   }
 
@@ -47,6 +48,12 @@ class Questions extends React.Component {
     }
   }
 
+  handleBtn = () => {
+    this.setState({
+      validateColor: true,
+    });
+  };
+
   shufleArray = (arr) => {
     const param = 0.5;
     const resultSort = arr.sort(() => Math.random() - param);
@@ -68,7 +75,7 @@ class Questions extends React.Component {
   renderQuestions = () => {
     const {
       respostaApi: { results },
-      index, disabled,
+      index, disabled, validateColor
     } = this.state;
     if (results === undefined) return '';
     const question = results[index];
@@ -79,6 +86,10 @@ class Questions extends React.Component {
     }));
     const arrButtons = [question.correct_answer, ...addIndex];
     const shufleButtons = this.shufleArray(arrButtons);
+    const validGreen = validateColor === true ? { border: '3px solid rgb(6, 240, 15)' }
+      : null;
+    const validRed = validateColor === true ? { border: '3px solid rgb(255, 0, 0)' }
+      : null;
     return (
       <div>
         <h2 data-testid="question-category">{ question.category }</h2>
@@ -86,6 +97,9 @@ class Questions extends React.Component {
         <div data-testid="answer-options">
           { shufleButtons.map((button, ind) => (
             <button
+              style={ button === question.correct_answer ? (
+                validGreen) : (validRed) }
+              onClick={ this.handleBtn }
               key={ ind }
               type="button"
               disabled={ disabled }
@@ -104,6 +118,9 @@ class Questions extends React.Component {
     this.setState((prevState) => ({
       index: prevState.index + 1,
     }));
+    this.setState({
+      validateColor: false,
+    });
   }
 
   render() {
