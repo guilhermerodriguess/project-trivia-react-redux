@@ -9,6 +9,7 @@ class Questions extends React.Component {
     super();
     this.state = {
       validToken: false,
+      respostaApi: 'vazio',
     };
   }
 
@@ -28,12 +29,13 @@ class Questions extends React.Component {
     const endPoint = `https://opentdb.com/api.php?amount=5&token=${token}`;
     const response = await fetch(endPoint);
     const responseJSOn = await response.json();
-    console.log(responseJSOn);
-    return responseJSOn;
+    this.setState({
+      respostaApi: responseJSOn,
+    });
   }
 
   validateAPI = async () => {
-    const response = this.requestAPI();
+    const response = await this.requestAPI();
     const expirationCode = 3;
     if (response.response_code === expirationCode) {
       const { getToken } = this.props;
@@ -41,13 +43,47 @@ class Questions extends React.Component {
     }
   }
 
+  shufleArray = (arr) => {
+    const param = 0.5;
+    const resultSort = arr.sort(() => Math.random() - param);
+    return resultSort;
+  }
+
+  renderQuestions = () => {
+    const { respostaApi: { results } } = this.state;
+    return results === undefined ? null : results.map((question, index) => {
+      const incorrectArr = [...question.incorrect_answers];
+      const addIndex = incorrectArr.map((response, indexTwo) => ({
+        response,
+        ind: indexTwo,
+      }));
+      const arrButtons = [question.correct_answer, ...addIndex];
+      const shufleButtons = this.shufleArray(arrButtons);
+      return (
+        <div key={ index }>
+          <h2 data-testid="question-category">{ question.category }</h2>
+          <h2 data-testid="question-text">{ question.question }</h2>
+          <div data-testid="answer-options">
+            {shufleButtons.map((button, ind) => (
+              <button
+                key={ ind }
+                type="button"
+                data-testid={ button === question.correct_answer ? (
+                  'correct-answer') : (`wrong-answer-${button.ind}`) }
+              >
+                { button.response === undefined ? button : button.response }
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    });
+  }
+
   render() {
-    const responseApi = this.requestAPI();
-    // const { category } = responseApi.results;
-    console.log(responseApi, 'resposta aqui');
     return (
       <div>
-        <h2 data-testid="question-category"> </h2>
+        {this.renderQuestions()}
       </div>
     );
   }
