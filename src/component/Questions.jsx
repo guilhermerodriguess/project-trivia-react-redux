@@ -75,7 +75,7 @@ class Questions extends React.Component {
   renderQuestions = () => {
     const {
       respostaApi: { results },
-      index, disabled, validateColor
+      index, disabled, validateColor,
     } = this.state;
     if (results === undefined) return '';
     const question = results[index];
