@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import store from '../redux/store';
 import { updateToken } from '../redux/actions';
+import Timer from './Timer';
 
 class Questions extends React.Component {
   constructor() {
@@ -11,6 +12,7 @@ class Questions extends React.Component {
       validToken: false,
       respostaApi: 'vazio',
       index: 0,
+      disabled: false,
     };
   }
 
@@ -51,8 +53,23 @@ class Questions extends React.Component {
     return resultSort;
   }
 
+  disableBtn = (response) => {
+    if (response) {
+      this.setState({
+        disabled: true,
+      });
+    } else {
+      this.setState({
+        disabled: false,
+      });
+    }
+  }
+
   renderQuestions = () => {
-    const { respostaApi: { results }, index } = this.state;
+    const {
+      respostaApi: { results },
+      index, disabled,
+    } = this.state;
     if (results === undefined) return '';
     const question = results[index];
     const incorrectArr = [...question.incorrect_answers];
@@ -71,6 +88,7 @@ class Questions extends React.Component {
             <button
               key={ ind }
               type="button"
+              disabled={ disabled }
               data-testid={ button === question.correct_answer ? (
                 'correct-answer') : (`wrong-answer-${button.ind}`) }
             >
@@ -89,8 +107,14 @@ class Questions extends React.Component {
   }
 
   render() {
+    const { index } = this.state;
     return (
       <div>
+        <Timer
+          disableBtn={ this.disableBtn }
+          tempo={ 30 }
+          question={ index }
+        />
         { this.renderQuestions() }
         <button
           type="button"
