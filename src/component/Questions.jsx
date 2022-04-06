@@ -10,6 +10,7 @@ class Questions extends React.Component {
     this.state = {
       validToken: false,
       respostaApi: 'vazio',
+      index: 0,
     };
   }
 
@@ -32,6 +33,7 @@ class Questions extends React.Component {
     this.setState({
       respostaApi: responseJSOn,
     });
+    return responseJSOn;
   }
 
   validateAPI = async () => {
@@ -50,40 +52,52 @@ class Questions extends React.Component {
   }
 
   renderQuestions = () => {
-    const { respostaApi: { results } } = this.state;
-    return results === undefined ? null : results.map((question, index) => {
-      const incorrectArr = [...question.incorrect_answers];
-      const addIndex = incorrectArr.map((response, indexTwo) => ({
-        response,
-        ind: indexTwo,
-      }));
-      const arrButtons = [question.correct_answer, ...addIndex];
-      const shufleButtons = this.shufleArray(arrButtons);
-      return (
-        <div key={ index }>
-          <h2 data-testid="question-category">{ question.category }</h2>
-          <h2 data-testid="question-text">{ question.question }</h2>
-          <div data-testid="answer-options">
-            {shufleButtons.map((button, ind) => (
-              <button
-                key={ ind }
-                type="button"
-                data-testid={ button === question.correct_answer ? (
-                  'correct-answer') : (`wrong-answer-${button.ind}`) }
-              >
-                { button.response === undefined ? button : button.response }
-              </button>
-            ))}
-          </div>
+    const { respostaApi: { results }, index } = this.state;
+    if (results === undefined) return '';
+    const question = results[index];
+    const incorrectArr = [...question.incorrect_answers];
+    const addIndex = incorrectArr.map((response, indexTwo) => ({
+      response,
+      ind: indexTwo,
+    }));
+    const arrButtons = [question.correct_answer, ...addIndex];
+    const shufleButtons = this.shufleArray(arrButtons);
+    return (
+      <div>
+        <h2 data-testid="question-category">{ question.category }</h2>
+        <h2 data-testid="question-text">{ question.question }</h2>
+        <div data-testid="answer-options">
+          { shufleButtons.map((button, ind) => (
+            <button
+              key={ ind }
+              type="button"
+              data-testid={ button === question.correct_answer ? (
+                'correct-answer') : (`wrong-answer-${button.ind}`) }
+            >
+              { button.response === undefined ? button : button.response }
+            </button>
+          ))}
         </div>
-      );
-    });
+      </div>
+    );
+  }
+
+  nextQuestion = () => {
+    this.setState((prevState) => ({
+      index: prevState.index + 1,
+    }));
   }
 
   render() {
     return (
       <div>
-        {this.renderQuestions()}
+        { this.renderQuestions() }
+        <button
+          type="button"
+          onClick={ this.nextQuestion }
+        >
+          Next
+        </button>
       </div>
     );
   }
