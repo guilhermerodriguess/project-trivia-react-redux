@@ -14,6 +14,7 @@ class Questions extends React.Component {
       index: 0,
       disabled: false,
       validateColor: false,
+      shufleButtons: [],
     };
   }
 
@@ -46,6 +47,7 @@ class Questions extends React.Component {
       const { getToken } = this.props;
       getToken();
     }
+    this.prepareQuestion();
   }
 
   handleBtn = () => {
@@ -71,12 +73,9 @@ class Questions extends React.Component {
       });
     }
   }
-
-  renderQuestions = () => {
-    const {
-      respostaApi: { results },
-      index, disabled, validateColor,
-    } = this.state;
+  
+  prepareQuestion = () => {
+    const { respostaApi: { results }, index } = this.state;
     if (results === undefined) return '';
     const question = results[index];
     const incorrectArr = [...question.incorrect_answers];
@@ -86,10 +85,19 @@ class Questions extends React.Component {
     }));
     const arrButtons = [question.correct_answer, ...addIndex];
     const shufleButtons = this.shufleArray(arrButtons);
+    this.setState({
+      shufleButtons,
+    });
+  };
+
+  renderQuestions = () => {
+    const { respostaApi: { results }, index, shufleButtons, validateColor } = this.state;
+    if (results === undefined) return '';
     const validGreen = validateColor === true ? { border: '3px solid rgb(6, 240, 15)' }
       : null;
     const validRed = validateColor === true ? { border: '3px solid rgb(255, 0, 0)' }
       : null;
+    const question = results[index];
     return (
       <div>
         <h2 data-testid="question-category">{ question.category }</h2>
@@ -115,12 +123,12 @@ class Questions extends React.Component {
   }
 
   nextQuestion = () => {
+    const { index } = this.state;
+    if (index === 5) return null;
     this.setState((prevState) => ({
       index: prevState.index + 1,
-    }));
-    this.setState({
       validateColor: false,
-    });
+    }),() => { this.prepareQuestion() });
   }
 
   render() {
