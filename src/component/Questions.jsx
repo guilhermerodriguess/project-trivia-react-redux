@@ -166,6 +166,21 @@ class Questions extends React.Component {
     }), () => { this.prepareQuestion(); });
   }
 
+  renderNextQuestion = () => {
+    const { validateColor } = this.state;
+    if (validateColor === true) {
+      return (
+        <button
+          type="button"
+          onClick={ this.nextQuestion }
+          data-testid="btn-next"
+        >
+          Next
+        </button>
+      );
+    }
+  }
+
   render() {
     const { index, respondido } = this.state;
     return (
@@ -176,12 +191,7 @@ class Questions extends React.Component {
           respondido={ respondido }
         />
         { this.renderQuestions() }
-        <button
-          type="button"
-          onClick={ this.nextQuestion }
-        >
-          Next
-        </button>
+        { this.renderNextQuestion() }
       </div>
     );
   }
