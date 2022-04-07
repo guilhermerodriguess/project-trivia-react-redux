@@ -17,6 +17,7 @@ class Questions extends React.Component {
       shufleButtons: [],
     };
   }
+  // correção
 
   componentDidMount() {
     this.validateAPI();
@@ -73,7 +74,7 @@ class Questions extends React.Component {
       });
     }
   }
-  
+
   prepareQuestion = () => {
     const { respostaApi: { results }, index } = this.state;
     if (results === undefined) return '';
@@ -91,7 +92,8 @@ class Questions extends React.Component {
   };
 
   renderQuestions = () => {
-    const { respostaApi: { results }, index, shufleButtons, validateColor } = this.state;
+    const { respostaApi: { results }, index,
+      shufleButtons, validateColor, disabled } = this.state;
     if (results === undefined) return '';
     const validGreen = validateColor === true ? { border: '3px solid rgb(6, 240, 15)' }
       : null;
@@ -124,11 +126,12 @@ class Questions extends React.Component {
 
   nextQuestion = () => {
     const { index } = this.state;
-    if (index === 5) return null;
+    const MAX = 5;
+    if (index === MAX) return null;
     this.setState((prevState) => ({
       index: prevState.index + 1,
       validateColor: false,
-    }),() => { this.prepareQuestion() });
+    }), () => { this.prepareQuestion(); });
   }
 
   render() {
