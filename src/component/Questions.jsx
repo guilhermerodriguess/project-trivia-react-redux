@@ -17,7 +17,8 @@ class Questions extends React.Component {
       shufleButtons: [],
     };
   }
-// correção
+  // correção
+
   componentDidMount() {
     this.validateAPI();
     store.subscribe(this.updateToken);
