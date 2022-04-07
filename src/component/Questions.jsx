@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import store from '../redux/store';
 import { updateScore, updateToken } from '../redux/actions';
 import Timer from './Timer';
@@ -49,7 +50,9 @@ class Questions extends React.Component {
       const { getToken } = this.props;
       getToken();
     }
-    this.prepareQuestion();
+    const { index } = this.state;
+    const maxNumb = 4;
+    if (index <= maxNumb) this.prepareQuestion();
   }
 
   handleBtn = ({ target }) => {
@@ -106,7 +109,8 @@ class Questions extends React.Component {
 
   prepareQuestion = () => {
     const { respostaApi: { results }, index } = this.state;
-    if (results === undefined) return '';
+    const maxNumb = 4;
+    if (results === undefined || index > maxNumb) return '';
     const question = results[index];
     const incorrectArr = [...question.incorrect_answers];
     const addIndex = incorrectArr.map((response, indexTwo) => ({
@@ -157,8 +161,8 @@ class Questions extends React.Component {
 
   nextQuestion = () => {
     const { index } = this.state;
-    const MAX = 5;
-    if (index === MAX) return null;
+    const MAX = 4;
+    if (index > MAX) return null;
     this.setState((prevState) => ({
       index: prevState.index + 1,
       validateColor: false,
@@ -183,17 +187,21 @@ class Questions extends React.Component {
 
   render() {
     const { index, respondido } = this.state;
-    return (
-      <div>
-        <Timer
-          disableBtn={ this.disableBtn }
-          question={ index }
-          respondido={ respondido }
-        />
-        { this.renderQuestions() }
-        { this.renderNextQuestion() }
-      </div>
-    );
+    const MaxNumber = 4;
+    if (index <= MaxNumber) {
+      return (
+        <div>
+          <Timer
+            disableBtn={ this.disableBtn }
+            question={ index }
+            respondido={ respondido }
+          />
+          { this.renderQuestions() }
+          { this.renderNextQuestion() }
+        </div>
+      );
+    }
+    return (<Redirect to="/feedback" />);
   }
 }
 
