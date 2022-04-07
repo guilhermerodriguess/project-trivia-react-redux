@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import store from '../redux/store';
-import { updateToken } from '../redux/actions';
+import { updateScore, updateToken } from '../redux/actions';
 import Timer from './Timer';
 
 class Questions extends React.Component {
@@ -15,9 +15,10 @@ class Questions extends React.Component {
       disabled: false,
       validateColor: false,
       shufleButtons: [],
+      tempoAtual: 0,
+      respondido: false,
     };
   }
-  // correção
 
   componentDidMount() {
     this.validateAPI();
@@ -51,10 +52,14 @@ class Questions extends React.Component {
     this.prepareQuestion();
   }
 
-  handleBtn = () => {
+  handleBtn = ({ target }) => {
     this.setState({
       validateColor: true,
+      respondido: true,
     });
+    if (target.name === 'correct') {
+      this.checkScore();
+    }
   };
 
   shufleArray = (arr) => {
@@ -63,10 +68,34 @@ class Questions extends React.Component {
     return resultSort;
   }
 
-  disableBtn = (response) => {
+  checkScore = () => {
+    const {
+      tempoAtual, respostaApi: { results },
+      index,
+    } = this.state;
+    const { dispatchUpdatedScore } = this.props;
+    const hard = 3;
+    let dificuldade = hard;
+    switch (results[index].difficulty) {
+    case ('easy'):
+      dificuldade = 1;
+      break;
+    case ('medium'):
+      dificuldade = 2;
+      break;
+    default:
+      break;
+    }
+    const base = 10;
+    const score = base + (tempoAtual * dificuldade);
+    dispatchUpdatedScore(score);
+  }
+
+  disableBtn = (response, tempo) => {
     if (response) {
       this.setState({
         disabled: true,
+        tempoAtual: tempo,
       });
     } else {
       this.setState({
@@ -110,6 +139,8 @@ class Questions extends React.Component {
               style={ button === question.correct_answer ? (
                 validGreen) : (validRed) }
               onClick={ this.handleBtn }
+              name={ button === question.correct_answer
+                ? ('correct') : ('incorrect') }
               key={ ind }
               type="button"
               disabled={ disabled }
@@ -131,17 +162,18 @@ class Questions extends React.Component {
     this.setState((prevState) => ({
       index: prevState.index + 1,
       validateColor: false,
+      respondido: false,
     }), () => { this.prepareQuestion(); });
   }
 
   render() {
-    const { index } = this.state;
+    const { index, respondido } = this.state;
     return (
       <div>
         <Timer
           disableBtn={ this.disableBtn }
-          tempo={ 30 }
           question={ index }
+          respondido={ respondido }
         />
         { this.renderQuestions() }
         <button
@@ -158,6 +190,7 @@ class Questions extends React.Component {
 Questions.propTypes = {
   getToken: PropTypes.func.isRequired,
   token: PropTypes.string.isRequired,
+  dispatchUpdatedScore: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -166,6 +199,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   getToken: () => dispatch(updateToken()),
+  dispatchUpdatedScore: (score) => dispatch(updateScore(score)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Questions);

@@ -18,24 +18,34 @@ class Timer extends React.Component {
   }
 
   resetTime = (prevProps) => {
-    const { question } = this.props;
+    const { question, disableBtn } = this.props;
     if (prevProps.question !== question) {
       this.setState({
         tempo: 30,
       }, () => {
-        this.handleTime();
-        const { disableBtn } = this.props;
         disableBtn(false);
+        this.handleTime();
       });
     }
   }
 
   handleTime = () => {
+    const { respondido } = this.props;
+    if (respondido) {
+      this.setState((prevState) => ({
+        tempo: prevState.tempo + 1,
+      }), () => {
+        const { tempo } = this.state;
+        const { disableBtn } = this.props;
+        disableBtn(true, tempo);
+      });
+      return null;
+    }
     const { tempo } = this.state;
     if (tempo === 0) {
       const { disableBtn } = this.props;
       disableBtn(true);
-      return true;
+      return null;
     }
     const onesec = 1000;
     setTimeout(() => {
@@ -49,7 +59,9 @@ class Timer extends React.Component {
   render() {
     const { tempo } = this.state;
     return (
-      <p>{ tempo }</p>
+      <div>
+        <p>{ tempo }</p>
+      </div>
     );
   }
 }
@@ -57,6 +69,7 @@ class Timer extends React.Component {
 Timer.propTypes = {
   disableBtn: propTypes.func.isRequired,
   question: propTypes.number.isRequired,
+  respondido: propTypes.bool.isRequired,
 };
 
 export default Timer;
