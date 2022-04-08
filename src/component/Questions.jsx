@@ -87,11 +87,12 @@ class Questions extends React.Component {
       dificuldade = 2;
       break;
     default:
-      break;
+      dificuldade = hard;
     }
     const base = 10;
-    const divided = 10;
-    const assertions = base / divided;
+    console.log(dificuldade);
+    console.log(tempoAtual);
+    const assertions = 1;
     updateAssertion(assertions);
     const score = base + (tempoAtual * dificuldade);
     dispatchUpdatedScore(score);

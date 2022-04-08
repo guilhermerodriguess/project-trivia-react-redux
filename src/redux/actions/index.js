@@ -2,6 +2,7 @@ export const UPDATE_LOGIN = 'UPDATE_LOGIN';
 export const UPDATE_TOKEN = 'UPDATE_TOKEN';
 export const UPDATE_SCORE = 'UPDATE_SCORE';
 export const UPDATE_ASSERTIONS = 'UPDATE_ASSERTIONS';
+export const RESET_SCORE = 'RESET_SCORE';
 
 export const updateLogin = (login) => ({
   type: UPDATE_LOGIN,
@@ -28,4 +29,8 @@ export const updateScore = (score) => ({
 export const updateAssertions = (assertions) => ({
   type: UPDATE_ASSERTIONS,
   assertions,
+});
+
+export const resetScore = () => ({
+  type: RESET_SCORE,
 });
