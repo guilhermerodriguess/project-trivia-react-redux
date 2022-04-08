@@ -16,7 +16,6 @@ class Questions extends React.Component {
       disabled: false,
       validateColor: false,
       shufleButtons: [],
-      tempoAtual: 0,
       respondido: false,
     };
   }
@@ -73,7 +72,7 @@ class Questions extends React.Component {
 
   checkScore = () => {
     const {
-      tempoAtual, respostaApi: { results },
+      respostaApi: { results },
       index,
     } = this.state;
     const { dispatchUpdatedScore, updateAssertion } = this.props;
@@ -89,20 +88,18 @@ class Questions extends React.Component {
     default:
       dificuldade = hard;
     }
+    const { time } = this.props;
     const base = 10;
-    console.log(dificuldade);
-    console.log(tempoAtual);
     const assertions = 1;
-    updateAssertion(assertions);
-    const score = base + (tempoAtual * dificuldade);
+    const score = base + (time * dificuldade);
     dispatchUpdatedScore(score);
+    updateAssertion(assertions);
   }
 
-  disableBtn = (response, tempo) => {
+  disableBtn = (response) => {
     if (response) {
       this.setState({
         disabled: true,
-        tempoAtual: tempo,
       });
     } else {
       this.setState({
@@ -214,10 +211,12 @@ Questions.propTypes = {
   token: PropTypes.string.isRequired,
   dispatchUpdatedScore: PropTypes.func.isRequired,
   updateAssertion: PropTypes.func.isRequired,
+  time: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   token: state.token,
+  time: state.time,
 });
 
 const mapDispatchToProps = (dispatch) => ({
