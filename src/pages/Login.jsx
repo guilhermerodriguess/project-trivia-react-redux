@@ -1,6 +1,9 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import LoginForm from '../component/LoginForm';
+import { resetScore } from '../redux/actions';
 import logo from '../trivia.png';
 
 class Login extends React.Component {
@@ -9,6 +12,11 @@ class Login extends React.Component {
     this.state = {
       redirect: false,
     };
+  }
+
+  componentDidMount() {
+    const { clearScore } = this.props;
+    clearScore();
   }
 
   btnClick = () => {
@@ -41,4 +49,12 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+Login.propTypes = {
+  clearScore: PropTypes.func.isRequired,
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  clearScore: () => dispatch(resetScore()),
+});
+
+export default connect(null, mapDispatchToProps)(Login);

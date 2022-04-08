@@ -1,12 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import md5 from 'crypto-js/md5';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Header from '../component/Header';
 
 class Feedback extends React.Component {
   componentDidMount() {
     this.handleRanking();
+  }
+
+  compare = (a, b) => {
+    const negativo = -1;
+    if (a.score > b.score) return negativo;
+    if (a.score < b.score) return 1;
+    return 0;
   }
 
   handleRanking = () => {
@@ -17,6 +25,7 @@ class Feedback extends React.Component {
     const validateJSON = ranking === null ? '' : ranking;
     const scoreObj = { name, score, picture: urlFoto };
     const result = [...validateJSON, scoreObj];
+    result.sort(this.compare);
     localStorage.setItem('ranking', JSON.stringify(result));
   }
 
@@ -49,6 +58,14 @@ class Feedback extends React.Component {
           <p data-testid="feedback-total-score">{score}</p>
           <p>Questões corretas:</p>
           <p data-testid="feedback-total-question">{assertions}</p>
+          <Link to="/ranking">
+            <button
+              type="button"
+              data-testid="btn-ranking"
+            >
+              Ranking
+            </button>
+          </Link>
           <button
             type="button"
             data-testid="btn-play-again"
@@ -79,4 +96,3 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps)(Feedback);
-// correcao

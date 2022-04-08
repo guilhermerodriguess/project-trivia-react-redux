@@ -14,27 +14,22 @@ class Ranking extends React.Component {
     this.handleRanking();
   }
 
-  compare = (a, b) => {
-    const negativo = -1;
-    if (a.score > b.score) return negativo;
-    if (a.score < b.score) return 1;
-    return 0;
-  }
-
   handleRanking = () => {
     const ranking = JSON.parse(localStorage.getItem('ranking'));
-    ranking.sort(this.compare);
-    this.setState({
-      ranking,
-    });
+    if (ranking) {
+      this.setState({
+        ranking,
+      });
+    }
   }
 
   render() {
     const { ranking } = this.state;
     return (
       <div className="ranking-page">
+        <h1 data-testid="ranking-title">Ranking</h1>
         {
-          ranking.length > 0
+          ranking !== undefined && ranking.length > 0
             ? ranking.map(({ name, score, picture }, index) => (
               <Score
                 key={ index }

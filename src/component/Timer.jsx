@@ -1,5 +1,7 @@
 import React from 'react';
 import propTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { updateTimer } from '../redux/actions';
 
 class Timer extends React.Component {
   constructor() {
@@ -33,11 +35,10 @@ class Timer extends React.Component {
     const { respondido } = this.props;
     if (respondido) {
       this.setState((prevState) => ({
-        tempo: prevState.tempo + 1,
+        tempo: prevState.tempo + 2,
       }), () => {
-        const { tempo } = this.state;
         const { disableBtn } = this.props;
-        disableBtn(true, tempo);
+        disableBtn(true);
       });
       return null;
     }
@@ -48,10 +49,12 @@ class Timer extends React.Component {
       return null;
     }
     const onesec = 1000;
+    const { atualizaTempo } = this.props;
     setTimeout(() => {
       this.setState((prevState) => ({
         tempo: prevState.tempo - 1,
       }));
+      atualizaTempo(tempo);
       this.handleTime();
     }, onesec);
   }
@@ -70,6 +73,11 @@ Timer.propTypes = {
   disableBtn: propTypes.func.isRequired,
   question: propTypes.number.isRequired,
   respondido: propTypes.bool.isRequired,
+  atualizaTempo: propTypes.func.isRequired,
 };
 
-export default Timer;
+const mapDispatchToProps = (dispatch) => ({
+  atualizaTempo: (tempo) => dispatch(updateTimer(tempo)),
+});
+
+export default connect(null, mapDispatchToProps)(Timer);
