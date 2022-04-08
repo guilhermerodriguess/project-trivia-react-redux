@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import store from '../redux/store';
-import { updateScore, updateToken } from '../redux/actions';
+import { updateAssertions, updateScore, updateToken } from '../redux/actions';
 import Timer from './Timer';
 
 class Questions extends React.Component {
@@ -76,7 +76,7 @@ class Questions extends React.Component {
       tempoAtual, respostaApi: { results },
       index,
     } = this.state;
-    const { dispatchUpdatedScore } = this.props;
+    const { dispatchUpdatedScore, updateAssertion } = this.props;
     const hard = 3;
     let dificuldade = hard;
     switch (results[index].difficulty) {
@@ -90,6 +90,9 @@ class Questions extends React.Component {
       break;
     }
     const base = 10;
+    const divided = 10;
+    const assertions = base / divided;
+    updateAssertion(assertions);
     const score = base + (tempoAtual * dificuldade);
     dispatchUpdatedScore(score);
   }
@@ -209,6 +212,7 @@ Questions.propTypes = {
   getToken: PropTypes.func.isRequired,
   token: PropTypes.string.isRequired,
   dispatchUpdatedScore: PropTypes.func.isRequired,
+  updateAssertion: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -218,6 +222,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   getToken: () => dispatch(updateToken()),
   dispatchUpdatedScore: (score) => dispatch(updateScore(score)),
+  updateAssertion: (assertions) => dispatch(updateAssertions(assertions)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Questions);

@@ -1,8 +1,8 @@
-import { UPDATE_LOGIN, UPDATE_SCORE } from '../actions';
+import { UPDATE_ASSERTIONS, UPDATE_LOGIN, UPDATE_SCORE } from '../actions';
 
 const INITIAL_STATE = {
   name: '',
-  assertions: '',
+  assertions: 0,
   score: 0,
   gravatarEmail: '',
 };
@@ -19,6 +19,11 @@ const player = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       score: state.score + action.score,
+    };
+  case UPDATE_ASSERTIONS:
+    return {
+      ...state,
+      assertions: action.assertions + state.assertions,
     };
   default:
     return state;
