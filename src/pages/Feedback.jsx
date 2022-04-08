@@ -9,13 +9,17 @@ class Feedback extends React.Component {
     const beBetter = <h2 data-testid="feedback-text">Could be better...</h2>;
     const wellDone = <h2 data-testid="feedback-text">Well Done!</h2>;
     const threeAsnwers = 3;
-
     localStorage.setItem('score', score);
     localStorage.setItem('assertions', assertions);
 
     if (assertions < threeAsnwers) return beBetter;
     if (assertions >= threeAsnwers) return wellDone;
   }
+
+  playAgain = () => {
+    const { history } = this.props;
+    history.push('/');
+  };
 
   render() {
     const { assertions, score } = this.props;
@@ -30,6 +34,13 @@ class Feedback extends React.Component {
           <p data-testid="feedback-total-score">{score}</p>
           <p>Questões corretas:</p>
           <p data-testid="feedback-total-question">{assertions}</p>
+          <button
+            type="button"
+            data-testid="btn-play-again"
+            onClick={ this.playAgain }
+          >
+            Pagina inicial
+          </button>
         </main>
       </>
     );
@@ -37,6 +48,7 @@ class Feedback extends React.Component {
 }
 
 Feedback.propTypes = {
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
   assertions: PropTypes.number.isRequired,
   score: PropTypes.number.isRequired,
 };
