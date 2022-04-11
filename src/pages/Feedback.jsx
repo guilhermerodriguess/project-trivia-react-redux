@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import md5 from 'crypto-js/md5';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { Button } from 'react-bootstrap';
 import Header from '../component/Header';
 
 class Feedback extends React.Component {
@@ -52,27 +53,32 @@ class Feedback extends React.Component {
       <>
         <Header />
         <main>
-          <h1>Feedback</h1>
-          <h2 data-testid="feedback-text">{ this.motivationMessage() }</h2>
-          <p>Placar total:</p>
-          <p data-testid="feedback-total-score">{score}</p>
-          <p>Questões corretas:</p>
-          <p data-testid="feedback-total-question">{assertions}</p>
-          <Link to="/ranking">
-            <button
+          <div className="feedback">
+            <h1 data-testid="feedback-text">{ this.motivationMessage() }</h1>
+            <p>Placar total:</p>
+            <p data-testid="feedback-total-score">{score}</p>
+            <p>Questões corretas:</p>
+            <p data-testid="feedback-total-question">{assertions}</p>
+          </div>
+          <div className="feedback-buttons">
+            <Link to="/ranking">
+              <Button
+                variant="info"
+                type="button"
+                data-testid="btn-ranking"
+              >
+                Ranking
+              </Button>
+            </Link>
+            <Button
+              variant="info"
               type="button"
-              data-testid="btn-ranking"
+              data-testid="btn-play-again"
+              onClick={ this.playAgain }
             >
-              Ranking
-            </button>
-          </Link>
-          <button
-            type="button"
-            data-testid="btn-play-again"
-            onClick={ this.playAgain }
-          >
-            Pagina inicial
-          </button>
+              Pagina inicial
+            </Button>
+          </div>
         </main>
       </>
     );

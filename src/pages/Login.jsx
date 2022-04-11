@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Button } from 'react-bootstrap';
 import LoginForm from '../component/LoginForm';
 import { resetScore } from '../redux/actions';
 import logo from '../trivia.png';
@@ -32,18 +33,18 @@ class Login extends React.Component {
       <div className="login-page">
         <header className="App-header">
           <img src={ logo } className="App-logo" alt="logo" />
-          <p>
-            SUA VEZ
-          </p>
+          <div>
+            <LoginForm />
+            <Button
+              variant="light"
+              type="button"
+              data-testid="btn-settings"
+              onClick={ this.btnClick }
+            >
+              Configuração
+            </Button>
+          </div>
         </header>
-        <LoginForm />
-        <button
-          type="button"
-          data-testid="btn-settings"
-          onClick={ this.btnClick }
-        >
-          Configuração
-        </button>
       </div>
     );
   }

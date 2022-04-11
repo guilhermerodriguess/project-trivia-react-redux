@@ -8,10 +8,9 @@ class Header extends React.Component {
     const { name, email, score } = this.props;
     const convertEmail = md5(email).toString();
     return (
-      <header>
-        <img alt="foto" src={ `https://www.gravatar.com/avatar/${convertEmail}` } data-testid="header-profile-picture" />
+      <header id="header-game">
+        <img className="foto-perfil" alt="foto" src={ `https://www.gravatar.com/avatar/${convertEmail}` } data-testid="header-profile-picture" />
         <div>
-          Nome:
           <h2 data-testid="header-player-name">
             { name }
           </h2>

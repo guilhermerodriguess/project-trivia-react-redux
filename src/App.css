@@ -55,3 +55,119 @@
     transform: translate3d(4px, 0, 0);
   }
 }
+
+#header-game {
+  background-color: rgb(163, 163, 163);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+.foto-perfil {
+  border: 1px solid black;
+  border-radius: 50%;
+}
+
+.questionsMain {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.answer-options {
+  display: flex;
+}
+
+.questions {
+  background-color: blue;
+  color: white;
+  padding: 30px;
+  border: 1px solid red;
+  border-radius: 10px;
+  margin-bottom: 50px;
+}
+
+.answer-options button {
+  font-size: 150%;
+  margin-right: 10px;
+  padding: 10px;
+  border: 1px solid black;
+  border-radius: 10px;
+}
+
+.timer {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  font-size: 100%;
+  margin-bottom: 10px !important;
+  margin-top: 10px;
+}
+
+.timer h2 {
+  font-family: 'Orbitron', sans-serif !important;
+  width: 46px;
+  height: 46px;
+}
+
+.btn-next {
+  margin-top: 20px;
+}
+
+.answer-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.btn-next {
+  width: 100%;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.feedback {
+  padding: 20px;
+  font-size: 200%;
+  color: white;
+  margin-top: 30px;
+  width: 400px;
+  background-color: blue;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.feedback-buttons {
+  width: 300px;
+  display: flex;
+  justify-content: space-around;
+}
+
+#email-password input {
+  margin: 10px;
+}
+
+.players-ranking {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ranking-score-container {
+  display: flex !important;
+  flex-direction: row !important;
+  margin: 10px;
+}
+
+.picture {
+  width: 100px !important;
+}
+
