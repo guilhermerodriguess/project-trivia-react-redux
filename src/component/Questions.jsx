@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
 import store from '../redux/store';
 import { updateAssertions, updateScore, updateToken } from '../redux/actions';
 import Timer from './Timer';
@@ -146,32 +147,52 @@ class Questions extends React.Component {
     const { respostaApi: { results }, index,
       shufleButtons, validateColor, disabled } = this.state;
     if (results === undefined) return '';
-    const validGreen = validateColor === true ? { border: '3px solid rgb(6, 240, 15)' }
+    const validGreen = validateColor === true ? 'success'
       : null;
-    const validRed = validateColor === true ? { border: '3px solid rgb(255, 0, 0)' }
+    const validRed = validateColor === true ? 'danger'
       : null;
     const question = results[index];
     return (
-      <div>
-        <h2 data-testid="question-category">{ question.category }</h2>
-        <h2 data-testid="question-text">{ question.question }</h2>
-        <div data-testid="answer-options">
-          { shufleButtons.map((button, ind) => (
-            <button
-              style={ button === question.correct_answer ? (
-                validGreen) : (validRed) }
-              onClick={ this.handleBtn }
-              name={ button === question.correct_answer
-                ? ('correct') : ('incorrect') }
-              key={ ind }
-              type="button"
-              disabled={ disabled }
-              data-testid={ button === question.correct_answer ? (
-                'correct-answer') : (`wrong-answer-${button.ind}`) }
-            >
-              { button.response === undefined ? button : button.response }
-            </button>
-          ))}
+      <div className="questionsMain">
+        <div className="questions">
+          <h2
+            data-testid="question-category"
+            className="question-category"
+          >
+            { question.category }
+
+          </h2>
+          <h2
+            data-testid="question-text"
+            className="question-text"
+          >
+            { question.question }
+
+          </h2>
+        </div>
+        <div data-testid="answer-options" className="answer-container">
+          <div className="answer-options">
+            { shufleButtons.map((button, ind) => (
+              <Button
+                variant={ button === question.correct_answer ? (
+                  validGreen) : (validRed) }
+                onClick={ this.handleBtn }
+                name={ button === question.correct_answer
+                  ? ('correct') : ('incorrect') }
+                key={ ind }
+                type="button"
+                disabled={ disabled }
+                className="options-button"
+                data-testid={ button === question.correct_answer ? (
+                  'correct-answer') : (`wrong-answer-${button.ind}`) }
+              >
+                { button.response === undefined ? button : button.response }
+              </Button>
+            ))}
+          </div>
+          <div>
+            { this.renderNextQuestion() }
+          </div>
         </div>
       </div>
     );
@@ -192,13 +213,16 @@ class Questions extends React.Component {
     const { disabled } = this.state;
     if (disabled === true) {
       return (
-        <button
+        <Button
+          variant="primary"
+          size="lg"
           type="button"
           onClick={ this.nextQuestion }
+          className="btn-next"
           data-testid="btn-next"
         >
           Next
-        </button>
+        </Button>
       );
     }
   }
@@ -215,7 +239,6 @@ class Questions extends React.Component {
             respondido={ respondido }
           />
           { this.renderQuestions() }
-          { this.renderNextQuestion() }
         </div>
       );
     }

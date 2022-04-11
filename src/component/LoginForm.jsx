@@ -2,6 +2,7 @@ import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
 import { updateLogin, updateToken } from '../redux/actions';
 import Loading from './Loading';
 
@@ -60,35 +61,35 @@ class LoginForm extends React.Component {
     if (redirect) return <Redirect to="/game" />;
     if (loading) return <Loading />;
     return (
-      <form>
+      <form id="email-password">
         <label htmlFor="nome">
-          Nome:
           <input
             type="text"
             id="nome"
             value={ nome }
             onChange={ this.onInpChange }
+            placeholder="Nome"
             data-testid="input-player-name"
           />
         </label>
         <label htmlFor="email">
-          Email:
           <input
             type="text"
             id="email"
             value={ email }
             onChange={ this.onInpChange }
+            placeholder="Email"
             data-testid="input-gravatar-email"
           />
         </label>
-        <button
+        <Button
           type="submit"
           disabled={ disabled }
           onClick={ this.btnClick }
           data-testid="btn-play"
         >
           Play
-        </button>
+        </Button>
       </form>
     );
   }
