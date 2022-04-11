@@ -37,7 +37,7 @@ class Questions extends React.Component {
     const response = await fetch(endPoint);
     const responseJSOn = await response.json();
     this.setState({
-      respostaApi: responseJSOn,
+      respostaApi: this.fixQuestion(responseJSOn),
     });
     return responseJSOn;
   }
@@ -125,6 +125,23 @@ class Questions extends React.Component {
     });
   };
 
+  // arruma os &quot e &#039
+  fixQuestion = (respostaApi) => {
+    respostaApi.results.forEach((obj) => {
+      obj.question = obj.question.replace(/&amp;/g, '&')
+        .replace(/&quot;/g, '"')
+        .replace(/&#039;/g, "'");
+      obj.correct_answer = obj.correct_answer.replace(/&amp;/g, '&')
+        .replace(/&quot;/g, '"')
+        .replace(/&#039;/g, "'");
+      obj.incorrect_answers = obj.incorrect_answers
+        .map((value) => value.replace(/&amp;/g, '&')
+          .replace(/&quot;/g, '"')
+          .replace(/&#039;/g, "'"));
+    });
+    return respostaApi;
+  }
+
   renderQuestions = () => {
     const { respostaApi: { results }, index,
       shufleButtons, validateColor, disabled } = this.state;
@@ -172,8 +189,8 @@ class Questions extends React.Component {
   }
 
   renderNextQuestion = () => {
-    const { validateColor } = this.state;
-    if (validateColor === true) {
+    const { disabled } = this.state;
+    if (disabled === true) {
       return (
         <button
           type="button"
